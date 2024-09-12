@@ -71,7 +71,12 @@ func EditStudent(c *gin.Context) {
 	var student models.Student
 	id :=	c.Params.ByName("id")
 
-	database.DB.First(&student, id)
+	if err := database.DB.First(&student, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Student not found",
+		})
+		return
+	}
 
 	if err := c.ShouldBindJSON(&student); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -79,13 +84,20 @@ func EditStudent(c *gin.Context) {
 		})
 		return
 	}
+
 	if err := models.ValidateStudent(&student); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	database.DB.Model(&student).UpdateColumns(student)
+
+	if err := database.DB.Model(&student).Where("id = ?", id).Updates(student).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to update student",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, student)
 }
 

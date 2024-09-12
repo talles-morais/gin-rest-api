@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -106,4 +107,30 @@ func TestDeleteStudent(t *testing.T) {
 	response := httptest.NewRecorder()
 	r.ServeHTTP(response, request)
 	assert.Equal(t, http.StatusOK, response.Code)
+}
+
+func TestEditStudent(t *testing.T) {
+	database.Connect()
+	CreateMockStudent()
+	defer DeleteMockStudent()
+	r := SetupRouter()
+	r.PATCH("/students/:id", controllers.EditStudent)
+	path := "/students/" + strconv.Itoa(ID)
+
+	student := models.Student{
+		Name: "Fernanda",
+		CPF: "08008008013",
+		Phone: "24998611526",
+	}
+	jsonValue, _ := json.Marshal(student)
+
+	request, _ := http.NewRequest("PATCH", path, bytes.NewBuffer(jsonValue))
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, request)
+
+	var mockStudenUpdated models.Student
+	json.Unmarshal(response.Body.Bytes(), &mockStudenUpdated)
+	assert.Equal(t, "Fernanda", mockStudenUpdated.Name)
+	assert.Equal(t, "08008008013", mockStudenUpdated.CPF)
+	assert.Equal(t, "24998611526", mockStudenUpdated.Phone)
 }
