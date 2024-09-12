@@ -95,3 +95,15 @@ func TestSearchStudentById(t *testing.T) {
 	assert.Equal(t, "08008008012", mockStudent.CPF)
 	assert.Equal(t, "24998611506", mockStudent.Phone)
 }
+
+func TestDeleteStudent(t *testing.T) {
+	database.Connect()
+	CreateMockStudent()
+	r := SetupRouter()
+	r.DELETE("/students/:id", controllers.DeleteStudent)
+	path := "/students/" + strconv.Itoa(ID)
+	request, _ := http.NewRequest("DELETE", path, nil)
+	response := httptest.NewRecorder()
+	r.ServeHTTP(response, request)
+	assert.Equal(t, http.StatusOK, response.Code)
+}
