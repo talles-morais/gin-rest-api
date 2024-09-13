@@ -1,0 +1,187 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  models.Student:
+    properties:
+      cpf:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: Rota para mostrar todos os alunos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Mostra todos os alunos
+      tags:
+      - Students
+    post:
+      consumes:
+      - application/json
+      description: Rota para adicionar um aluno
+      parameters:
+      - description: Modelo de aluno
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Registra novo aluno
+      tags:
+      - Students
+  /students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Rota para deletar um aluno por sua id
+      parameters:
+      - description: Id de aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: deleta aluno por id
+      tags:
+      - Students
+    get:
+      consumes:
+      - application/json
+      description: Rota para procurar um aluno por sua id
+      parameters:
+      - description: Id de aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Procura aluno por id
+      tags:
+      - Students
+    patch:
+      consumes:
+      - application/json
+      description: Rota para editar um aluno por sua id
+      parameters:
+      - description: ID do aluno
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Modelo de aluno
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: edita aluno por id
+      tags:
+      - Students
+  /students/cpf/{cpf}:
+    get:
+      consumes:
+      - application/json
+      description: Rota para procurar um aluno pelo CPF
+      parameters:
+      - description: CPF do aluno
+        in: path
+        name: cpf
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Student'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Procura aluno por CPF
+      tags:
+      - Students
+swagger: "2.0"

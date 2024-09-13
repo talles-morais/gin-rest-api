@@ -4,10 +4,21 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/swaggo/swag/example/celler/httputil"
 	"github.com/talles-morais/gin-rest-api/database"
 	"github.com/talles-morais/gin-rest-api/models"
 )
 
+// SearchStudentById godoc
+// @Summary					 Procura aluno por id
+// @Description			 Rota para procurar um aluno por sua id
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Param   				 id	 	path 			int	true	"Id de aluno"
+// @Success					 200  {object} 	models.Student
+// @Failure					 400	{object}	httputil.HTTPError
+// @Router					 /students/{id}	[get]
 func SearchStudentById(c *gin.Context) {
 	var student models.Student
 	id := c.Params.ByName("id")
@@ -22,6 +33,15 @@ func SearchStudentById(c *gin.Context) {
 	c.JSON(http.StatusOK, student)
 }
 
+// ShowAllStudents 	 godoc
+// @Summary					 Mostra todos os alunos
+// @Description			 Rota para mostrar todos os alunos
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Success					 200  {object}  models.Student
+// @Failure					 400	{object}	httputil.HTTPError
+// @Router					 /students	[get]
 func ShowAllStudents(c *gin.Context) {
 	var students []models.Student
 	database.DB.Find(&students)
@@ -37,6 +57,16 @@ func ShowOneStudent(c *gin.Context) {
 	})
 }
 
+// CreateStudent 		 godoc
+// @Summary					 Registra novo aluno
+// @Description			 Rota para adicionar um aluno
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Param   				 student	body	models.Student true "Modelo de aluno"
+// @Success					 200 	{object} models.Student
+// @Failure					 400	{object}	httputil.HTTPError
+// @Router					 /students	[post]
 func CreateStudent(c *gin.Context) {
 	var student models.Student
 
@@ -57,6 +87,16 @@ func CreateStudent(c *gin.Context) {
 	c.JSON(http.StatusOK, student)
 }
 
+// SearchStudentById godoc
+// @Summary					 deleta aluno por id
+// @Description			 Rota para deletar um aluno por sua id
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Param   				 id	 	path 			int	true	"Id de aluno"
+// @Success					 200  {object} 	models.Student
+// @Failure					 400	{object}	httputil.HTTPError
+// @Router					 /students/{id}	[delete]
 func DeleteStudent(c *gin.Context) {
 	var student models.Student
 	id := c.Params.ByName("id")
@@ -67,6 +107,17 @@ func DeleteStudent(c *gin.Context) {
 
 }
 
+// SearchStudentById godoc
+// @Summary					 edita aluno por id
+// @Description			 Rota para editar um aluno por sua id
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Param   				 id	 	path 			int	true	"ID do aluno"
+// @Param   				 student	body	models.Student true "Modelo de aluno"
+// @Success					 200  {object} 	models.Student
+// @Failure					 400	{object}	httputil.HTTPError
+// @Router					 /students/{id}	[patch]
 func EditStudent(c *gin.Context) {
 	var student models.Student
 	id :=	c.Params.ByName("id")
@@ -101,6 +152,17 @@ func EditStudent(c *gin.Context) {
 	c.JSON(http.StatusOK, student)
 }
 
+
+// SearchStudent godoc
+// @Summary					 Procura aluno por CPF
+// @Description			 Rota para procurar um aluno pelo CPF
+// @Tags						 Students
+// @Accept					 json
+// @Produce					 json
+// @Param   				 cpf	 	path 			string	true	"CPF do aluno"
+// @Success					 200  {object}  models.Student
+// @Failure					 404	{object}	httputil.HTTPError
+// @Router					 /students/cpf/{cpf}	[get]
 func SearchStudent(c *gin.Context) {
 	var student models.Student
 	cpf := c.Param("cpf")
