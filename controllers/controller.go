@@ -122,3 +122,7 @@ func RenderIndexPage(c *gin.Context) {
 		"alunos": students,
 	})
 }
+
+func RouteNotFound(c *gin.Context) {
+	c.HTML(http.StatusNotFound, "404.html", nil)
+}

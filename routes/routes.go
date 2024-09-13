@@ -17,5 +17,6 @@ func HandleRequests() {
 	r.POST("/students", controllers.CreateStudent)
 	r.PATCH("/students/:id", controllers.EditStudent)
 	r.GET("/home", controllers.RenderIndexPage)
+	r.NoRoute(controllers.RouteNotFound)
 	r.Run()
 }
